@@ -1,13 +1,80 @@
-const SideNavMain = () => {
+import { useState, useEffect } from "react";
+import { Users, Settings } from "lucide-react";
+import { cn } from "../utils/utils";
+
+const navItems = [
+  { name: "Users", icon: Users, href: "#" },
+  { name: "Settings", icon: Settings, href: "#" },
+];
+
+export default function SideNavMain() {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check for mobile screen size
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+      if (window.innerWidth >= 768) {
+        setIsExpanded(true); // Keep expanded on larger screens
+      } else {
+        setIsExpanded(false); // Collapse on mobile by default
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Toggle expand/collapse on icon click for mobile screens
+  const handleIconClick = () => {
+    if (isMobile) {
+      setIsExpanded((prev) => !prev);
+    }
+  };
+
   return (
-    <aside className="w-64 bg-white shadow-md">
-      <div className="p-4">
-        <h1 className="text-2xl font-kanitmedium text-gray-800">
-          Admin Dashboard
+    <section
+      className={cn(
+        "md:relative md:z-0 flex h-screen flex-col bg-white shadow-md transition-all duration-300 ease-in-out",
+        isExpanded ? "w-64" : "w-16",
+        isExpanded ? "fixed z-40" : ""
+      )}
+    >
+      <div className="p-4 flex justify-center">
+        <h1
+          className={cn(
+            "font-kanitmedium text-gray-800 transition-all duration-300 ease-in-out",
+            isExpanded ? "text-3xl" : "text-lg"
+          )}
+        >
+          {isExpanded ? "Admin Dashboard" : "AD"}
         </h1>
       </div>
-    </aside>
+      <nav className="mt-6 flex flex-col space-y-2">
+        {navItems.map((item) => (
+          <a
+            key={item.name}
+            href={item.href}
+            onClick={handleIconClick}
+            className={cn(
+              "flex items-center px-4 py-2 text-gray-700 hover:bg-gray-200 transition-all duration-300 ease-in-out",
+              isExpanded ? "justify-start" : "justify-center"
+            )}
+          >
+            <item.icon className="h-5 w-5" />
+            <span
+              className={cn(
+                "ml-2 font-mono transition-all duration-300 ease-in-out",
+                isExpanded ? "opacity-100" : "opacity-0 w-0"
+              )}
+            >
+              {item.name}
+            </span>
+          </a>
+        ))}
+      </nav>
+    </section>
   );
-};
-
-export default SideNavMain;
+}
