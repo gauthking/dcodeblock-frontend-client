@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  background-color: rgba(234, 231, 231, 0.653);
+}
+
 @font-face {
   font-family: "kanit-black";
   src: url("../public/fonts/Kanit-Black.ttf") format("truetype");
