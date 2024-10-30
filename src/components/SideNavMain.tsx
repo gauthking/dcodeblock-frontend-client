@@ -3,8 +3,8 @@ import { Users, Settings } from "lucide-react";
 import { cn } from "../utils/utils";
 
 const navItems = [
-  { name: "Users", icon: Users, href: "#" },
-  { name: "Settings", icon: Settings, href: "#" },
+  { name: "Overview", icon: Settings, href: "/main" },
+  { name: "Users", icon: Users, href: "/userm" },
 ];
 
 export default function SideNavMain() {
@@ -37,10 +37,12 @@ export default function SideNavMain() {
   return (
     <section
       className={cn(
-        "md:relative md:z-0 flex h-screen flex-col bg-white shadow-md transition-all duration-300 ease-in-out",
+        "md:relative md:z-0 flex min-h-screen flex-col bg-white shadow-md transition-all duration-300 ease-in-out",
         isExpanded ? "w-64" : "w-16",
         isExpanded ? "fixed z-40" : ""
       )}
+      onMouseEnter={() => isMobile && setIsExpanded(true)} // Expand on hover
+      onMouseLeave={() => isMobile && setIsExpanded(false)} // Collapse on hover out
     >
       <div className="p-4 flex justify-center">
         <h1

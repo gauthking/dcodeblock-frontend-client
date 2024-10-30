@@ -1,12 +1,16 @@
 import Overview from "../components/Overview";
 import SideNavMain from "../components/SideNavMain";
+import UserMgmt from "../components/UserMgmt";
 
-const Dashboard: React.FC = () => {
+interface DashboardProps {
+  pageType: string;
+}
+
+const Dashboard: React.FC<DashboardProps> = ({ pageType }) => {
   return (
     <main className="flex min-h-screen min-w-[100%]">
       <SideNavMain />
-
-      <Overview />
+      {pageType === "overview" ? <Overview /> : <UserMgmt />}
     </main>
   );
 };

@@ -7,7 +7,11 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<LoginPage />}></Route>
-        <Route path="/main" element={<Dashboard />}></Route>
+        <Route path="/main" element={<Dashboard pageType="overview" />}></Route>
+        <Route
+          path="/userm"
+          element={<Dashboard pageType="UserMgmt" />}
+        ></Route>
       </Routes>
     </Router>
   );

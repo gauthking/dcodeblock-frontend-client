@@ -12,6 +12,13 @@ export interface IconObject {
     [key: string]: IconType;
 }
 
+export interface UserData {
+    id: number;
+    name: string;
+    email: string;
+    role: string;
+}
+
 /**
  * Define an interface "INAV_INFO" to represent the structure of navigation information.
  * @interface INAV_INFO
