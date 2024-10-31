@@ -9,6 +9,8 @@ import {
   Trash2,
   Users,
 } from "lucide-react";
+import { UserInfo } from "../@types";
+import { useNavigate } from "react-router-dom";
 
 interface UserData {
   id: number;
@@ -29,9 +31,25 @@ const UserMgmt: React.FC = () => {
   const [isEditUserModalOpen, setIsEditUserModalOpen] =
     useState<boolean>(false);
   const [editingUser, setEditingUser] = useState<UserData | null>(null);
+  const [userInfo, setUserInfo] = useState<UserInfo>();
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
+    const user = JSON.parse(sessionStorage.getItem("user") || "{}");
+    setUserInfo(user);
+
+    const handleStorageChange = () => {
+      const token = sessionStorage.getItem("token");
+      const user = sessionStorage.getItem("user");
+
+      if (!token || !user) {
+        console.log("Session storage cleared, redirecting to login...");
+        navigate("/");
+      }
+    };
+
+    handleStorageChange();
     const handleClickOutside = (event: MouseEvent) => {
       if (
         dropdownRef.current &&
@@ -46,6 +64,13 @@ const UserMgmt: React.FC = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  const onLogout = () => {
+    sessionStorage.removeItem("user");
+    sessionStorage.removeItem("token");
+    setIsDropdownOpen(false);
+    navigate("/");
+  };
 
   return (
     <div className="flex w-full h-screen bg-gray-100">
@@ -63,7 +88,9 @@ const UserMgmt: React.FC = () => {
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 className="flex items-center space-x-2 bg-white rounded-md shadow-md px-3 py-2"
               >
-                <span>John Doe</span>
+                <span className="text-sm md:text-lg font-mono">
+                  {userInfo?.userName}
+                </span>
                 <ChevronDown className="h-4 w-4" />
               </button>
               {isDropdownOpen && (
@@ -87,8 +114,8 @@ const UserMgmt: React.FC = () => {
                     </a>
                     <hr />
                     <a
-                      href="#"
-                      className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={onLogout}
+                      className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
                     >
                       <LogOut className="mr-2 h-4 w-4" />
                       <span>Log out</span>
