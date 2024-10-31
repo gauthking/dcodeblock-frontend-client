@@ -12,6 +12,20 @@ export interface IconObject {
     [key: string]: IconType;
 }
 
+export interface UserAction {
+    associatedUser: string;
+    action: string;
+    time: string;
+}
+
+export interface UserInfo {
+    userName: string;
+    userEmail: string;
+    password: string;
+    role: string;
+    activities: [UserAction] | [];
+}
+
 export interface UserData {
     id: number;
     name: string;

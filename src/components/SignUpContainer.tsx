@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { CiLock, CiMail, CiUser } from "react-icons/ci";
 import { FaEye } from "react-icons/fa";
-import axios from "axios";
+import axios from "../utils/axios";
 import { useNavigate } from "react-router-dom";
 import bcrypt from "bcryptjs";
 
@@ -14,23 +14,25 @@ const SignUpContainer: React.FC = () => {
   const [success, setSuccess] = useState<string>("");
   const navigate = useNavigate();
 
-  const salt: any = process.env.saltVal;
-
   const handleSignUp = async () => {
     try {
-      const hashedPassword = await bcrypt.hash(password, salt);
-
-      const response = await axios.post("/api/user/register", {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const response = await axios.post("/api/user/signup", {
         userName: name,
         userEmail: email,
-        password: hashedPassword,
+        hashedPassword: hashedPassword,
       });
+
+      const { token, user } = response.data;
+      sessionStorage.setItem("token", token);
+      sessionStorage.setItem("user", JSON.stringify(user));
 
       setSuccess(response.data.message);
       setError("");
 
       navigate("/main");
     } catch (err: any) {
+      console.log("An error occurred during sign up.", err);
       setError(
         err.response?.data?.message || "An error occurred during sign up."
       );

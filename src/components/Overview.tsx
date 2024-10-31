@@ -13,6 +13,8 @@ import {
   Legend,
 } from "chart.js";
 import { Bell } from "lucide-react";
+import { UserInfo } from "../@types";
+import { useNavigate } from "react-router-dom";
 
 ChartJS.register(
   CategoryScale,
@@ -26,7 +28,9 @@ ChartJS.register(
 
 const Overview = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [userInfo, setUserInfo] = useState<UserInfo>();
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -37,12 +41,33 @@ const Overview = () => {
         setIsOpen(false);
       }
     };
+    const user = JSON.parse(sessionStorage.getItem("user") || "{}");
+    setUserInfo(user);
+
+    const handleStorageChange = () => {
+      const token = sessionStorage.getItem("token");
+      const user = sessionStorage.getItem("user");
+
+      if (!token || !user) {
+        console.log("Session storage cleared, redirecting to login...");
+        navigate("/");
+      }
+    };
+
+    handleStorageChange();
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  const onLogout = () => {
+    sessionStorage.removeItem("user");
+    sessionStorage.removeItem("token");
+    setIsOpen(false);
+    navigate("/");
+  };
 
   const toggleDropdown = () => setIsOpen(!isOpen);
 
@@ -65,7 +90,9 @@ const Overview = () => {
               aria-haspopup="true"
               aria-expanded={isOpen}
             >
-              <p className="text-sm md:text-lg font-mono">John Doe</p>
+              <p className="text-sm md:text-lg font-mono">
+                {userInfo?.userName}
+              </p>
               <IoIosArrowDown
                 className={`transform transition-transform ${
                   isOpen ? "rotate-180" : ""
@@ -90,7 +117,7 @@ const Overview = () => {
                     Settings
                   </a>
                   <a
-                    href="#logout"
+                    onClick={onLogout}
                     className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
                     <FiLogOut className="mr-3" />
