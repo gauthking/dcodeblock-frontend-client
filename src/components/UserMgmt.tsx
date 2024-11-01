@@ -11,31 +11,26 @@ import {
 } from "lucide-react";
 import { UserInfo } from "../@types";
 import { useNavigate } from "react-router-dom";
-
-interface UserData {
-  id: number;
-  name: string;
-  email: string;
-  role: string;
-}
+import axios from "../utils/axios";
+import bcrypt from "bcryptjs";
 
 const UserMgmt: React.FC = () => {
-  const [role, setRole] = useState<string>("admin");
-  const [users, setUsers] = useState<UserData[]>([
-    { id: 1, name: "John Doe", email: "john@example.com", role: "Admin" },
-    { id: 2, name: "Jane Smith", email: "jane@example.com", role: "User" },
-    { id: 3, name: "Bob Johnson", email: "bob@example.com", role: "User" },
-  ]);
+  const [users, setUsers] = useState<UserInfo[]>();
+  const [addUserName, setAddUserName] = useState<string>("");
+  const [addUserRole, setAddUserRole] = useState<string>("");
+  const [addUserEmail, setAddUserEmail] = useState<string>("");
+  const [addUserPwd, setAddUserPwd] = useState<string>("");
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [isAddUserModalOpen, setIsAddUserModalOpen] = useState<boolean>(false);
   const [isEditUserModalOpen, setIsEditUserModalOpen] =
     useState<boolean>(false);
-  const [editingUser, setEditingUser] = useState<UserData | null>(null);
+  const [editingUser, setEditingUser] = useState<UserInfo | null>(null);
   const [userInfo, setUserInfo] = useState<UserInfo>();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
+    fetchUsers();
     const user = JSON.parse(sessionStorage.getItem("user") || "{}");
     setUserInfo(user);
 
@@ -64,12 +59,80 @@ const UserMgmt: React.FC = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+  console.log(users);
 
   const onLogout = () => {
     sessionStorage.removeItem("user");
     sessionStorage.removeItem("token");
     setIsDropdownOpen(false);
     navigate("/");
+  };
+
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get("/api/user/getAllUsers");
+      console.log(response.data);
+      setUsers(response.data);
+    } catch (error) {
+      alert("Error fetching users.");
+    }
+  };
+
+  const editUser = async (
+    id: string,
+    updatedName: string,
+    updatedEmail: string,
+    updatedPassword: string,
+    updatedRole: string
+  ) => {
+    if (userInfo?.role !== "admin") {
+      alert("Admin role is required to perform this operation.");
+      return;
+    }
+
+    try {
+      console.log(updatedPassword);
+      const hashedPassword = await bcrypt.hash(updatedPassword, 10);
+
+      await axios.put(`/api/admin/update/${id}`, {
+        userName: updatedName,
+        userEmail: updatedEmail,
+        password: hashedPassword,
+        role: updatedRole,
+        requestingUserEmail: userInfo.userEmail,
+      });
+      fetchUsers().then(() => alert("User updated successfully"));
+      setIsEditUserModalOpen(false);
+    } catch (error) {
+      alert("Error updating user.");
+    }
+  };
+
+  const createUser = async () => {
+    if (!addUserEmail || !addUserName || !addUserPwd || !addUserRole) {
+      alert("Please fill all the fields to continue..");
+    } else {
+      if (userInfo?.role !== "admin") {
+        alert("Admin role is required to perform this operation.");
+        return;
+      }
+
+      const hashedPassword = await bcrypt.hash(addUserPwd, 10);
+
+      try {
+        await axios.post("/api/admin/create", {
+          userName: addUserName,
+          userEmail: addUserEmail,
+          password: hashedPassword,
+          role: addUserRole,
+          requestingUserEmail: userInfo.userEmail,
+        });
+        fetchUsers().then(() => alert("User created successfully"));
+        setIsAddUserModalOpen(false);
+      } catch (error) {
+        alert("Error creating user.");
+      }
+    }
   };
 
   return (
@@ -127,7 +190,7 @@ const UserMgmt: React.FC = () => {
           </div>
         </div>
 
-        {role === "admin" && (
+        {userInfo?.role === "admin" && (
           <button
             onClick={() => setIsAddUserModalOpen(true)}
             className="mb-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
@@ -142,24 +205,24 @@ const UserMgmt: React.FC = () => {
               <th className="px-4 py-2 text-left">Name</th>
               <th className="px-4 py-2 text-left">Email</th>
               <th className="px-4 py-2 text-left">Role</th>
-              {role === "admin" && (
+              {userInfo?.role === "admin" && (
                 <th className="px-4 py-2 text-left">Actions</th>
               )}
             </tr>
           </thead>
           <tbody>
-            {users.map((user) => (
-              <tr key={user.id} className="border-t">
+            {users?.map((user: UserInfo) => (
+              <tr key={user._id} className="border-t">
                 <td className="px-4 py-2 text-sm md:text-[17px]">
-                  {user.name}
+                  {user.userName}
                 </td>
                 <td className="px-4 py-2 text-sm md:text-[17px]">
-                  {user.email}
+                  {user.userEmail}
                 </td>
                 <td className="px-4 py-2 text-sm md:text-[17px]">
                   {user.role}
                 </td>
-                {role === "admin" && (
+                {userInfo?.role === "admin" && (
                   <td className="px-4 py-2">
                     <div className="flex space-x-2">
                       <button
@@ -191,8 +254,8 @@ const UserMgmt: React.FC = () => {
           <div className="bg-white p-6 rounded-lg w-96">
             <h3 className="text-lg font-semibold mb-4">Add New User</h3>
             <form
-              onSubmit={(e) => {
-                e.preventDefault(); /* Add user logic */
+              onSubmit={() => {
+                createUser();
               }}
             >
               <div className="mb-4">
@@ -203,6 +266,8 @@ const UserMgmt: React.FC = () => {
                   Name
                 </label>
                 <input
+                  value={addUserName}
+                  onChange={(e) => setAddUserName(e.target.value)}
                   id="name"
                   name="name"
                   type="text"
@@ -218,9 +283,28 @@ const UserMgmt: React.FC = () => {
                   Email
                 </label>
                 <input
+                  value={addUserEmail}
+                  onChange={(e) => setAddUserEmail(e.target.value)}
                   id="email"
                   name="email"
                   type="email"
+                  required
+                  className="w-full px-3 py-2 border rounded-md"
+                />
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Set Password
+                </label>
+                <input
+                  value={addUserPwd}
+                  onChange={(e) => setAddUserPwd(e.target.value)}
+                  id="password"
+                  name="password"
+                  type="password"
                   required
                   className="w-full px-3 py-2 border rounded-md"
                 />
@@ -233,6 +317,8 @@ const UserMgmt: React.FC = () => {
                   Role
                 </label>
                 <select
+                  value={addUserRole}
+                  onChange={(e) => setAddUserRole(e.target.value)}
                   id="role"
                   name="role"
                   required
@@ -262,77 +348,102 @@ const UserMgmt: React.FC = () => {
         </div>
       )}
 
-      {/* Edit User Modal */}
       {isEditUserModalOpen && editingUser && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-white p-6 rounded-lg w-96">
             <h3 className="text-lg font-semibold mb-4">Edit User</h3>
             <form
               onSubmit={(e) => {
-                e.preventDefault(); /* Edit user logic */
+                e.preventDefault();
+                editUser(
+                  editingUser._id,
+                  (e.target as any).name.value,
+                  (e.target as any).email.value,
+                  (e.target as any).password.value,
+                  (e.target as any).role.value
+                );
               }}
             >
               <div className="mb-4">
                 <label
-                  htmlFor="edit-name"
-                  className="block text-sm font-medium text-gray-700 mb-1"
+                  className="block text-sm font-medium text-gray-700"
+                  htmlFor="editUserName"
                 >
                   Name
                 </label>
                 <input
-                  id="edit-name"
-                  name="name"
                   type="text"
-                  defaultValue={editingUser.name}
+                  id="editUserName"
+                  name="name"
+                  defaultValue={editingUser.userName}
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                   required
-                  className="w-full px-3 py-2 border rounded-md"
                 />
               </div>
+
               <div className="mb-4">
                 <label
-                  htmlFor="edit-email"
-                  className="block text-sm font-medium text-gray-700 mb-1"
+                  className="block text-sm font-medium text-gray-700"
+                  htmlFor="editUserEmail"
                 >
                   Email
                 </label>
                 <input
-                  id="edit-email"
-                  name="email"
                   type="email"
-                  defaultValue={editingUser.email}
+                  id="editUserEmail"
+                  name="email"
+                  defaultValue={editingUser.userEmail}
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                   required
-                  className="w-full px-3 py-2 border rounded-md"
                 />
               </div>
+
               <div className="mb-4">
                 <label
-                  htmlFor="edit-role"
-                  className="block text-sm font-medium text-gray-700 mb-1"
+                  className="block text-sm font-medium text-gray-700"
+                  htmlFor="editUserPwd"
+                >
+                  Password
+                </label>
+                <input
+                  type="password"
+                  id="editUserPwd"
+                  name="password"
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  required
+                />
+              </div>
+
+              <div className="mb-6">
+                <label
+                  className="block text-sm font-medium text-gray-700"
+                  htmlFor="editUserRole"
                 >
                   Role
                 </label>
                 <select
-                  id="edit-role"
+                  id="editUserRole"
                   name="role"
                   defaultValue={editingUser.role}
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                   required
-                  className="w-full px-3 py-2 border rounded-md"
                 >
-                  <option value="Admin">Admin</option>
-                  <option value="User">User</option>
+                  <option value="user">User</option>
+                  <option value="admin">Admin</option>
                 </select>
               </div>
-              <div className="flex justify-end space-x-2">
+
+              <div className="flex justify-end">
                 <button
                   type="button"
                   onClick={() => setIsEditUserModalOpen(false)}
-                  className="px-4 py-2 border rounded-md"
+                  className="mr-4 px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                  className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
                 >
                   Save Changes
                 </button>

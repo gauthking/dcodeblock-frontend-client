@@ -19,20 +19,13 @@ export interface UserAction {
 }
 
 export interface UserInfo {
+    _id: string;
     userName: string;
     userEmail: string;
     password: string;
     role: string;
     activities: [UserAction] | [];
 }
-
-export interface UserData {
-    id: number;
-    name: string;
-    email: string;
-    role: string;
-}
-
 /**
  * Define an interface "INAV_INFO" to represent the structure of navigation information.
  * @interface INAV_INFO
