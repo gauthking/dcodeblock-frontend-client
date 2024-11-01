@@ -1,9 +1,10 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import { Bell, ChevronDown, Edit, LogOut, Plus, Trash2 } from "lucide-react";
 import { UserInfo } from "../@types";
 import { useNavigate } from "react-router-dom";
 import axios from "../utils/axios";
 import bcrypt from "bcryptjs";
+import { AppContext } from "../App";
 
 const UserMgmt: React.FC = () => {
   const [users, setUsers] = useState<UserInfo[]>();
@@ -19,6 +20,8 @@ const UserMgmt: React.FC = () => {
   const [userInfo, setUserInfo] = useState<UserInfo>();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+
+  const { darkMode } = useContext(AppContext);
 
   useEffect(() => {
     fetchUsers();
@@ -273,7 +276,8 @@ const UserMgmt: React.FC = () => {
           <div className="bg-white p-6 rounded-lg w-96">
             <h3 className="text-lg font-semibold mb-4">Add New User</h3>
             <form
-              onSubmit={() => {
+              onSubmit={(e) => {
+                e.preventDefault();
                 createUser();
               }}
             >

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import { FiUser, FiSettings, FiLogOut } from "react-icons/fi";
 import { Line } from "react-chartjs-2";
@@ -16,6 +16,7 @@ import { Bell } from "lucide-react";
 import { UserInfo } from "../@types";
 import { useNavigate } from "react-router-dom";
 import axios from "../utils/axios";
+import { AppContext } from "../App";
 
 ChartJS.register(
   CategoryScale,
@@ -33,7 +34,7 @@ const Overview = () => {
   const [recentActivities, setRecentActivities] = useState<UserInfo[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-
+  const { darkMode } = useContext(AppContext);
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -98,7 +99,11 @@ const Overview = () => {
   const toggleDropdown = () => setIsOpen(!isOpen);
 
   return (
-    <main className="w-full flex flex-col items-center mx-2 p-5">
+    <main
+      className={`w-full flex flex-col items-center p-5 ${
+        darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
+      }`}
+    >
       <section className="w-full flex justify-between">
         <div className="header m-1">
           <h1 className="font-kanitmedium text-xl md:text-3xl">
@@ -106,13 +111,19 @@ const Overview = () => {
           </h1>
         </div>
         <nav className="flex items-center justify-center gap-3 ">
-          <div className="p-1 rounded-lg bg-white hover:scale-105 transition-all ease-in-out cursor-pointer">
+          <div
+            className={`p-1 rounded-lg ${
+              darkMode ? "bg-gray-800" : "bg-white"
+            } hover:scale-105 transition-all ease-in-out cursor-pointer`}
+          >
             <Bell className="h-5 w-5" />
           </div>
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={toggleDropdown}
-              className="flex items-center justify-center gap-2 p-1 rounded-lg bg-white cursor-pointer hover:scale-105 transition-all ease-in-out"
+              className={`flex items-center justify-center gap-2 p-1 rounded-lg ${
+                darkMode ? "bg-gray-800" : "bg-white"
+              } cursor-pointer hover:scale-105 transition-all ease-in-out`}
               aria-haspopup="true"
               aria-expanded={isOpen}
             >
@@ -126,7 +137,11 @@ const Overview = () => {
               />
             </button>
             {isOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+              <div
+                className={`absolute right-0 mt-2 w-48 rounded-md shadow-lg z-10 ${
+                  darkMode ? "bg-gray-800" : "bg-white"
+                }`}
+              >
                 <div className="py-1">
                   <button className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                     <FiUser className="mr-3" />
@@ -150,94 +165,84 @@ const Overview = () => {
         </nav>
       </section>
 
-      <div className="w-full bg-gray-400 h-[0.5px] m-2 md:my-6"></div>
+      <div
+        className={`w-full h-[0.5px] m-2 md:my-6 ${
+          darkMode ? "bg-gray-600" : "bg-gray-400"
+        }`}
+      ></div>
 
       <section className="grid grid-cols-1 md:grid-cols-2 w-full gap-3">
-        <div className="bg-white p-4 rounded-xl w-full shadow-md hover:scale-105 transition-all ease-in-out">
-          <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <div className="text-sm font-kanitmedium">Total Users</div>
-            <div className="h-4 w-4 text-muted-foreground" />
-          </div>
-          <div>
-            <div className="text-2xl font-bold">1,234</div>
-            <p className="text-xs text-muted-foreground">
-              +20.1% from last month
-            </p>
-          </div>
-        </div>
-        <div className="bg-white p-4 rounded-xl w-full shadow-md hover:scale-105 transition-all ease-in-out">
-          <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <div className="text-sm font-kanitmedium">Active Users</div>
-            <div className="h-4 w-4 text-muted-foreground" />
-          </div>
-          <div>
-            <div className="text-2xl font-bold">1,234</div>
-            <p className="text-xs text-muted-foreground">
-              +10.4% from last month
-            </p>
-          </div>
-        </div>
-        <div className="bg-white p-4 rounded-xl w-full shadow-md hover:scale-105 transition-all ease-in-out">
-          <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <div className="text-sm font-kanitmedium">New Sign-ups</div>
-            <div className="h-4 w-4 text-muted-foreground" />
-          </div>
-          <div>
-            <div className="text-2xl font-bold">45</div>
-            <p className="text-xs text-muted-foreground">+2% from last week</p>
-          </div>
-        </div>
-        <div className="bg-white p-4 rounded-xl w-full shadow-md hover:scale-105 transition-all ease-in-out">
-          <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <div className="text-sm font-kanitmedium">User Retention</div>
-            <div className="h-4 w-4 text-muted-foreground" />
-          </div>
-          <div>
-            <div className="text-2xl font-bold">12.5%</div>
-            <p className="text-xs text-muted-foreground">
-              +12% from last quarter
-            </p>
-          </div>
-        </div>
+        {["Total Users", "Active Users", "New Sign-ups", "User Retention"].map(
+          (title, index) => (
+            <div
+              key={index}
+              className={`p-4 rounded-xl w-full shadow-md hover:scale-105 transition-all ease-in-out ${
+                darkMode ? "bg-gray-800" : "bg-white"
+              }`}
+            >
+              <div className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <div className="text-sm font-kanitmedium">{title}</div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold">
+                  {index === 2 ? 45 : 1234}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {index === 2
+                    ? "+2% from last week"
+                    : "+20.1% from last month"}
+                </p>
+              </div>
+            </div>
+          )
+        )}
       </section>
 
-      <div className="w-full bg-gray-300 h-[0.5px] m-2 md:my-6"></div>
+      <div
+        className={`w-full h-[0.5px] m-2 md:my-6 ${
+          darkMode ? "bg-gray-600" : "bg-gray-300"
+        }`}
+      ></div>
 
       <section className="grid grid-cols-1 md:grid-cols-2 w-full gap-6">
-        <div className="bg-white p-4 rounded-xl shadow-md">
+        <div
+          className={`p-4 rounded-xl shadow-md ${
+            darkMode ? "bg-gray-800" : "bg-white"
+          }`}
+        >
           <h2 className="text-xl font-kanitmedium mb-4">
             Recent User Activity
           </h2>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-hidden">
             <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+              <thead className={`${darkMode ? "bg-gray-700" : "bg-gray-50"}`}>
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                     User
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                     Action
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                     Date
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200 font-mono">
+              <tbody className="divide-y divide-gray-200 ">
                 {recentActivities
-                  ?.filter((f: UserInfo) => f.activities.length !== 0)
-                  .map((activity: UserInfo) => (
+                  ?.filter((f) => f.activities.length !== 0)
+                  .map((activity) => (
                     <tr key={activity._id}>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm  font-kanitmedium">
                         {activity.userName}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm  font-kanitmedium">
                         {
                           activity.activities[activity.activities.length - 1]
                             ?.action
                         }
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm  font-kanitmedium">
                         {new Date(
                           activity.activities[
                             activity.activities.length - 1
@@ -250,7 +255,11 @@ const Overview = () => {
             </table>
           </div>
         </div>
-        <div className="bg-white p-4 rounded-xl shadow-md">
+        <div
+          className={`p-4 rounded-xl shadow-md ${
+            darkMode ? "bg-gray-800" : "bg-white"
+          }`}
+        >
           <h2 className="text-xl font-kanitmedium mb-4">User Growth</h2>
           <Line
             data={{
@@ -260,7 +269,9 @@ const Overview = () => {
                   label: "New Users",
                   data: [33, 53, 85, 41, 44, 65],
                   fill: false,
-                  borderColor: "rgb(75, 192, 192)",
+                  borderColor: darkMode
+                    ? "rgb(255, 255, 255)"
+                    : "rgb(75, 192, 192)",
                   tension: 0.1,
                 },
               ],
@@ -270,27 +281,25 @@ const Overview = () => {
               plugins: {
                 legend: {
                   position: "top" as const,
+                  labels: {
+                    color: darkMode ? "white" : "black",
+                  },
                 },
                 title: {
                   display: true,
                   text: "User Growth Chart",
+                  color: darkMode ? "white" : "black",
                 },
               },
               scales: {
                 x: {
-                  type: "category" as const,
-                  display: true,
-                  title: {
-                    display: true,
-                    text: "Month",
+                  ticks: {
+                    color: darkMode ? "white" : "black",
                   },
                 },
                 y: {
-                  type: "linear" as const,
-                  display: true,
-                  title: {
-                    display: true,
-                    text: "New Users",
+                  ticks: {
+                    color: darkMode ? "white" : "black",
                   },
                 },
               },

@@ -1,14 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Users, Settings } from "lucide-react";
 import { Link } from "react-router-dom"; // Import Link
 import { cn } from "../utils/utils";
+import { AppContext } from "../App";
 
 const navItems = [
-  { name: "Overview", icon: Settings, to: "/main" }, // Update `href` to `to`
+  { name: "Overview", icon: Settings, to: "/main" },
   { name: "Users", icon: Users, to: "/userm" },
 ];
 
 export default function SideNavMain() {
+  const { darkMode, setDarkMode } = useContext(AppContext);
+
   const [isExpanded, setIsExpanded] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -33,10 +36,15 @@ export default function SideNavMain() {
     }
   };
 
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
+
   return (
     <section
       className={cn(
-        "md:relative md:z-0 flex min-h-screen flex-col bg-white shadow-md transition-all duration-300 ease-in-out",
+        "md:relative md:z-0 flex min-h-screen flex-col shadow-md transition-all duration-300 ease-in-out",
+        darkMode ? "bg-gray-900 text-gray-100" : "bg-white text-gray-800",
         isExpanded ? "w-64" : "w-16",
         isExpanded ? "fixed z-40" : ""
       )}
@@ -46,13 +54,14 @@ export default function SideNavMain() {
       <div className="p-4 flex justify-center">
         <h1
           className={cn(
-            "font-kanitmedium text-gray-800 transition-all duration-300 ease-in-out",
+            "font-kanitmedium transition-all duration-300 ease-in-out",
             isExpanded ? "text-3xl" : "text-lg"
           )}
         >
           {isExpanded ? "Admin Dashboard" : "AD"}
         </h1>
       </div>
+
       <nav className="mt-6 flex flex-col space-y-2">
         {navItems.map((item) => (
           <Link
@@ -60,7 +69,10 @@ export default function SideNavMain() {
             key={item.name}
             onClick={handleIconClick}
             className={cn(
-              "flex items-center px-4 py-2 text-gray-700 hover:bg-gray-200 transition-all duration-300 ease-in-out",
+              "flex items-center px-4 py-2 rounded-md transition-all duration-300 ease-in-out",
+              darkMode
+                ? "text-gray-200 hover:bg-gray-700"
+                : "text-gray-700 hover:bg-gray-200",
               isExpanded ? "justify-start" : "justify-center"
             )}
           >
@@ -76,6 +88,32 @@ export default function SideNavMain() {
           </Link>
         ))}
       </nav>
+
+      <div className="mt-auto p-4">
+        <div
+          className={cn(
+            "flex items-center",
+            isExpanded ? "justify-between" : "justify-center"
+          )}
+        >
+          {isExpanded && (
+            <span className="text-sm font-medium">
+              {darkMode ? "Dark" : "Light"} Mode
+            </span>
+          )}
+          <button
+            onClick={toggleDarkMode}
+            className={cn(
+              "p-2 rounded-md font-mono transition-colors duration-200 my-4",
+              darkMode
+                ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
+                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+            )}
+          >
+            {darkMode ? "☀️" : "🌙"}
+          </button>
+        </div>
+      </div>
     </section>
   );
 }
