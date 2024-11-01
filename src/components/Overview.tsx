@@ -132,10 +132,7 @@ const Overview = () => {
                     <FiUser className="mr-3" />
                     Profile
                   </button>
-                  <button
-                    href="#settings"
-                    className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
+                  <button className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                     <FiSettings className="mr-3" />
                     Settings
                   </button>
