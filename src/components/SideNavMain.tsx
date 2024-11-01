@@ -1,24 +1,24 @@
 import { useState, useEffect } from "react";
 import { Users, Settings } from "lucide-react";
+import { Link } from "react-router-dom"; // Import Link
 import { cn } from "../utils/utils";
 
 const navItems = [
-  { name: "Overview", icon: Settings, href: "/main" },
-  { name: "Users", icon: Users, href: "/userm" },
+  { name: "Overview", icon: Settings, to: "/main" }, // Update `href` to `to`
+  { name: "Users", icon: Users, to: "/userm" },
 ];
 
 export default function SideNavMain() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
-  // Check for mobile screen size
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
       if (window.innerWidth >= 768) {
-        setIsExpanded(true); // Keep expanded on larger screens
+        setIsExpanded(true);
       } else {
-        setIsExpanded(false); // Collapse on mobile by default
+        setIsExpanded(false);
       }
     };
 
@@ -27,7 +27,6 @@ export default function SideNavMain() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Toggle expand/collapse on icon click for mobile screens
   const handleIconClick = () => {
     if (isMobile) {
       setIsExpanded((prev) => !prev);
@@ -41,8 +40,8 @@ export default function SideNavMain() {
         isExpanded ? "w-64" : "w-16",
         isExpanded ? "fixed z-40" : ""
       )}
-      onMouseEnter={() => isMobile && setIsExpanded(true)} // Expand on hover
-      onMouseLeave={() => isMobile && setIsExpanded(false)} // Collapse on hover out
+      onMouseEnter={() => isMobile && setIsExpanded(true)}
+      onMouseLeave={() => isMobile && setIsExpanded(false)}
     >
       <div className="p-4 flex justify-center">
         <h1
@@ -56,7 +55,8 @@ export default function SideNavMain() {
       </div>
       <nav className="mt-6 flex flex-col space-y-2">
         {navItems.map((item) => (
-          <button
+          <Link
+            to={item.to}
             key={item.name}
             onClick={handleIconClick}
             className={cn(
@@ -73,7 +73,7 @@ export default function SideNavMain() {
             >
               {item.name}
             </span>
-          </button>
+          </Link>
         ))}
       </nav>
     </section>
