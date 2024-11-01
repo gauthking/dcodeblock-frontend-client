@@ -56,9 +56,8 @@ export default function SideNavMain() {
       </div>
       <nav className="mt-6 flex flex-col space-y-2">
         {navItems.map((item) => (
-          <a
+          <button
             key={item.name}
-            href={item.href}
             onClick={handleIconClick}
             className={cn(
               "flex items-center px-4 py-2 text-gray-700 hover:bg-gray-200 transition-all duration-300 ease-in-out",
@@ -74,7 +73,7 @@ export default function SideNavMain() {
             >
               {item.name}
             </span>
-          </a>
+          </button>
         ))}
       </nav>
     </section>

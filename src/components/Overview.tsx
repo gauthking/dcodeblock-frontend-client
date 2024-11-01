@@ -128,27 +128,24 @@ const Overview = () => {
             {isOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
                 <div className="py-1">
-                  <a
-                    href="#profile"
-                    className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
+                  <button className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                     <FiUser className="mr-3" />
                     Profile
-                  </a>
-                  <a
+                  </button>
+                  <button
                     href="#settings"
                     className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
                     <FiSettings className="mr-3" />
                     Settings
-                  </a>
-                  <a
+                  </button>
+                  <button
                     onClick={onLogout}
                     className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
                     <FiLogOut className="mr-3" />
                     Log out
-                  </a>
+                  </button>
                 </div>
               </div>
             )}

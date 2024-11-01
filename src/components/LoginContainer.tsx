@@ -84,9 +84,9 @@ const LoginContainer: React.FC = () => {
       </button>
 
       <div className="text-sm text-gray-500 mx-3">
-        <a href="#" className="underline underline-offset-4 font-mono">
+        <button className="underline underline-offset-4 font-mono">
           Forgot password?
-        </a>
+        </button>
       </div>
     </section>
   );

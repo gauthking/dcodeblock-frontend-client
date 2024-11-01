@@ -183,26 +183,26 @@ const UserMgmt: React.FC = () => {
                       My Account
                     </p>
                     <hr />
-                    <a
+                    <button
                       href="#"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
                       Profile
-                    </a>
-                    <a
+                    </button>
+                    <button
                       href="#"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
                       Settings
-                    </a>
+                    </button>
                     <hr />
-                    <a
+                    <button
                       onClick={onLogout}
                       className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
                     >
                       <LogOut className="mr-2 h-4 w-4" />
                       <span>Log out</span>
-                    </a>
+                    </button>
                   </div>
                 </div>
               )}
