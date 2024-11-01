@@ -1,14 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import {
-  Bell,
-  ChevronDown,
-  Edit,
-  LogOut,
-  Plus,
-  Settings,
-  Trash2,
-  Users,
-} from "lucide-react";
+import { Bell, ChevronDown, Edit, LogOut, Plus, Trash2 } from "lucide-react";
 import { UserInfo } from "../@types";
 import { useNavigate } from "react-router-dom";
 import axios from "../utils/axios";
@@ -58,7 +49,7 @@ const UserMgmt: React.FC = () => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  });
   console.log(users);
 
   const onLogout = async () => {
