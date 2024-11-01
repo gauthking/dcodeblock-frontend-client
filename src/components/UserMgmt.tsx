@@ -17,7 +17,7 @@ import bcrypt from "bcryptjs";
 const UserMgmt: React.FC = () => {
   const [users, setUsers] = useState<UserInfo[]>();
   const [addUserName, setAddUserName] = useState<string>("");
-  const [addUserRole, setAddUserRole] = useState<string>("");
+  const [addUserRole, setAddUserRole] = useState<string>("admin");
   const [addUserEmail, setAddUserEmail] = useState<string>("");
   const [addUserPwd, setAddUserPwd] = useState<string>("");
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
@@ -61,10 +61,21 @@ const UserMgmt: React.FC = () => {
   }, []);
   console.log(users);
 
-  const onLogout = () => {
+  const onLogout = async () => {
     sessionStorage.removeItem("user");
     sessionStorage.removeItem("token");
     setIsDropdownOpen(false);
+    try {
+      await axios
+        .post("/api/admin/action", {
+          requestingUserEmail: userInfo?.userEmail,
+          action: "Logged Out",
+        })
+        .then(() => console.log("log out action posted"));
+    } catch (error) {
+      alert("Action not posted");
+      console.log("action post error - ", error);
+    }
     navigate("/");
   };
 
@@ -105,6 +116,24 @@ const UserMgmt: React.FC = () => {
       setIsEditUserModalOpen(false);
     } catch (error) {
       alert("Error updating user.");
+    }
+  };
+
+  const deleteUser = async (id: string) => {
+    if (userInfo?.role !== "admin") {
+      alert("Admin role is required to perform this operation.");
+      return;
+    }
+
+    try {
+      await axios
+        .post(`/api/admin/delete/${id}`, {
+          requestingUserEmail: userInfo.userEmail,
+        })
+        .then(() => fetchUsers())
+        .then(() => alert("Deleted user successfully"));
+    } catch (error) {
+      alert("Error deleting user.");
     }
   };
 
@@ -234,12 +263,17 @@ const UserMgmt: React.FC = () => {
                       >
                         <Edit className="inline-block mr-1 h-4 w-4" /> Edit
                       </button>
-                      <button
-                        onClick={() => {}}
-                        className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600 transition-colors text-sm"
-                      >
-                        <Trash2 className="inline-block mr-1 h-4 w-4" /> Delete
-                      </button>
+                      {user.userEmail !== userInfo.userEmail && (
+                        <button
+                          onClick={() => {
+                            deleteUser(user._id);
+                          }}
+                          className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600 transition-colors text-sm"
+                        >
+                          <Trash2 className="inline-block mr-1 h-4 w-4" />{" "}
+                          Delete
+                        </button>
+                      )}
                     </div>
                   </td>
                 )}
@@ -324,8 +358,8 @@ const UserMgmt: React.FC = () => {
                   required
                   className="w-full px-3 py-2 border rounded-md"
                 >
-                  <option value="Admin">Admin</option>
-                  <option value="User">User</option>
+                  <option value="admin">Admin</option>
+                  <option value="user">User</option>
                 </select>
               </div>
               <div className="flex justify-end space-x-2">
@@ -406,6 +440,7 @@ const UserMgmt: React.FC = () => {
                   Password
                 </label>
                 <input
+                  placeholder="if pwd not updating then pls enter prev password"
                   type="password"
                   id="editUserPwd"
                   name="password"

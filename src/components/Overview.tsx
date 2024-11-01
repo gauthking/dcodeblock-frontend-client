@@ -15,6 +15,7 @@ import {
 import { Bell } from "lucide-react";
 import { UserInfo } from "../@types";
 import { useNavigate } from "react-router-dom";
+import axios from "../utils/axios";
 
 ChartJS.register(
   CategoryScale,
@@ -29,6 +30,7 @@ ChartJS.register(
 const Overview = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [userInfo, setUserInfo] = useState<UserInfo>();
+  const [recentActivities, setRecentActivities] = useState<UserInfo[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
@@ -56,16 +58,40 @@ const Overview = () => {
 
     handleStorageChange();
 
+    const fetchRecentActivities = async () => {
+      try {
+        const response = await axios.get("/api/user/getAllUsers");
+
+        setRecentActivities(response.data);
+      } catch (error) {
+        console.error("Error fetching recent activities:", error);
+      }
+    };
+
+    fetchRecentActivities();
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
-  const onLogout = () => {
+  const onLogout = async () => {
     sessionStorage.removeItem("user");
     sessionStorage.removeItem("token");
     setIsOpen(false);
+
+    try {
+      await axios
+        .post("/api/admin/action", {
+          requestingUserEmail: userInfo?.userEmail,
+          action: "Logged Out",
+        })
+        .then(() => console.log("log out action posted"));
+    } catch (error) {
+      alert("Action not posted");
+      console.log("action post error - ", error);
+    }
     navigate("/");
   };
 
@@ -204,31 +230,28 @@ const Overview = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200 font-mono">
-                <tr>
-                  <td className="px-6 py-4 whitespace-nowrap">John Doe</td>
-                  <td className="px-6 py-4 whitespace-nowrap">Logged in</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    2023-05-01 10:30 AM
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-4 whitespace-nowrap">Jane Smith</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    Updated profile
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    2023-05-01 11:45 AM
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-4 whitespace-nowrap">Bob Johnson</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    Made a purchase
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    2023-05-01 2:15 PM
-                  </td>
-                </tr>
+                {recentActivities
+                  ?.filter((f: UserInfo) => f.activities.length !== 0)
+                  .map((activity: UserInfo) => (
+                    <tr key={activity._id}>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {activity.userName}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {
+                          activity.activities[activity.activities.length - 1]
+                            ?.action
+                        }
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {new Date(
+                          activity.activities[
+                            activity.activities.length - 1
+                          ]?.time
+                        ).toLocaleString()}
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>
