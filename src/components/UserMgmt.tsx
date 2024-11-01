@@ -49,7 +49,7 @@ const UserMgmt: React.FC = () => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  });
+  }, [navigate]);
   console.log(users);
 
   const onLogout = async () => {

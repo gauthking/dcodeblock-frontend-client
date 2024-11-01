@@ -74,7 +74,7 @@ const Overview = () => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  });
+  }, [navigate]);
 
   const onLogout = async () => {
     sessionStorage.removeItem("user");
