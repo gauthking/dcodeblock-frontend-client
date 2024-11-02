@@ -17,7 +17,7 @@ const LoginContainer: React.FC = () => {
     try {
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      console.log("password - ", hashedPassword);
+      // console.log("password - ", hashedPassword);
 
       const response = await axios.post("/api/user/login", {
         userEmail: email,

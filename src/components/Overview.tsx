@@ -213,7 +213,7 @@ const Overview = () => {
           <h2 className="text-xl font-kanitmedium mb-4">
             Recent User Activity
           </h2>
-          <div className="overflow-x-hidden">
+          <div className="overflow-x-auto noscrollbar">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className={`${darkMode ? "bg-gray-700" : "bg-gray-50"}`}>
                 <tr>

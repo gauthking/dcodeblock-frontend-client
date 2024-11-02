@@ -6,6 +6,24 @@ html {
   background-color: rgba(234, 231, 231, 0.653);
 }
 
+/* Hide the default scrollbar */
+html::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Chrome, Safari and Edge */
+}
+
+.noscrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.noscrollbar {
+  scrollbar-width: none;
+}
+
+/* Firefox scrollbar */
+html {
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
+}
+
 @font-face {
   font-family: "kanit-black";
   src: url("../public/fonts/Kanit-Black.ttf") format("truetype");
