@@ -1,21 +1,25 @@
-# Dasboard Application - Frontend Client - DCODEBLOCK Frontend Role Submission.
+# Admin Dashboard with Role-Based Access Control - Frontend Client - DCODEBLOCK Submission
 
-This is the frontend client for the dashboard application, built using React, TypeScript, and other essential libraries to provide a seamless user experience. 
+This is the frontend client for the **DCODEBLOCK Admin Dashboard with Role-Based Access Control application (Frontend Assignment-1)**, built using React, TypeScript, and other essential libraries to provide a seamless user experience. This repository is submitted as part of the DCODEBLOCK Frontend Engineer Hackathon.
 
-This repository is the submission for the DCODEBLOCK'S Frontend Engineer position. 
+Applicant Name & Details- [C P Gautham Krishna](https://www.linkedin.com/in/c-p-gautham-krishna-580450227/)
 
-THE WEBSITE IS LIVE AT : https://dcodeblock-frontend-client.onrender.com/
-
-DEMO Video - 
-
-Backend Server API Repository - https://github.com/gauthking/dcodeblock-frontend-serverapi
+- **Live Website**: [https://dcodeblock-frontend-client.onrender.com/](https://dcodeblock-frontend-client.onrender.com/)
+- **Demo Video**: (Add link here if available)
+- **Backend Server API Repository**: [https://github.com/gauthking/dcodeblock-frontend-serverapi](https://github.com/gauthking/dcodeblock-frontend-serverapi)
 
 ## Table of Contents
+- [Website Features](#website-features)
 - [Project Setup](#project-setup)
 - [Environment Variables](#environment-variables)
 - [Dependencies](#dependencies)
 - [Running the Project](#running-the-project)
 - [Application Screenshots](#application-screenshots)
+
+## Website Features
+- The website is hosted and accessible through the live link provided above.
+- The web app is fully responsive on all device screens (mobiles, tablets, and desktops).
+- The backend server for this application is hosted separately, with its GitHub repository link provided above.
 
 ## Project Setup
 
