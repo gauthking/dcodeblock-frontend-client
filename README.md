@@ -1,46 +1,78 @@
-# Getting Started with Create React App
+# Dasboard Application - Frontend Client - DCODEBLOCK Frontend Role Submission.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is the frontend client for the dashboard application, built using React, TypeScript, and other essential libraries to provide a seamless user experience. 
 
-## Available Scripts
+This repository is the submission for the DCODEBLOCK'S Frontend Engineer position. 
 
-In the project directory, you can run:
+THE WEBSITE IS LIVE AT : https://dcodeblock-frontend-client.onrender.com/
 
-### `npm start`
+DEMO Video - 
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Backend Server API Repository - https://github.com/gauthking/dcodeblock-frontend-serverapi
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Table of Contents
+- [Project Setup](#project-setup)
+- [Environment Variables](#environment-variables)
+- [Dependencies](#dependencies)
+- [Running the Project](#running-the-project)
+- [Application Screenshots](#application-screenshots)
 
-### `npm test`
+## Project Setup
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+To set up the project locally, please follow these steps:
 
-### `npm run build`
+1. **Clone the Repository:**
+   ```bash
+   git clone https://github.com/gauthking/dcodeblock-frontend-client.git
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+2. **Navigate into the Project Directory:**
+   ```bash
+   cd dcodeblock-frontend-client
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+3. **Install Dependencies: Ensure you have Node.js and npm installed. Then run:**
+   ```bash
+   npm install
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Environment Variables
+You need to configure the following environment variables in a .env file at the root of your project:
+  ```bash
+    REACT_APP_API_BASE - "https://dcodeblock-frontend-serverapi.onrender.com"
+    CI - (Optional) Set to false to disable Continuous Integration checks locally.
+```
 
-### `npm run eject`
+## Dependencies
+   This project requires the following major dependencies:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- React: A JavaScript library for building user interfaces.
+- TypeScript: A superset of JavaScript for static typing.
+- Axios: For making HTTP requests to the backend.
+-  bcryptjs: For hashing passwords on the client side.
+- lucide-react: For icons used in the UI.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Running the Project
+After setting up environment variables and installing dependencies, you can run the project locally with:
+   ```bash
+   npm run start
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Application Screenshots
+![image](https://github.com/user-attachments/assets/a55c5abd-a352-4966-8f3c-b07a1083d23c)
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+![image](https://github.com/user-attachments/assets/109766ef-fbe2-4c90-a13e-e183db41dee1)
 
-## Learn More
+![image](https://github.com/user-attachments/assets/43be72fe-cd2f-466a-8de6-498783cd6318)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+![image](https://github.com/user-attachments/assets/622d31d6-f43e-4f21-b070-afb780f726e0)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+![image](https://github.com/user-attachments/assets/04d3fa1f-4f1b-41ea-a93b-d0c1368c5eae)
+
+![image](https://github.com/user-attachments/assets/68434ff2-9558-47df-ae80-5a2add3e91ac)
+
+![image](https://github.com/user-attachments/assets/2b0208cd-f73c-4b21-82ef-cb87080af1b2)
+
+![image](https://github.com/user-attachments/assets/2b24869b-39c5-42e4-9daf-eda7befb0340)
+
+![image](https://github.com/user-attachments/assets/fdb37c6e-8e05-4333-b0ef-22069b3e0dc4)
+
+![image](https://github.com/user-attachments/assets/60b4d536-53fe-4aa9-93c0-1f8798d7e9ff)
+
