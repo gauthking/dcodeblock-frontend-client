@@ -19,6 +19,7 @@ Applicant Name & Details- [C P Gautham Krishna](https://www.linkedin.com/in/c-p-
 ## Website Features
 - The website is hosted and accessible through the live link provided above.
 - The web app is fully responsive on all device screens (mobiles, tablets, and desktops).
+- Apart fron the RBAC dasboard feature, this app also has signup and login features.
 - The backend server for this application is hosted separately, with its GitHub repository link provided above.
 
 ## Project Setup
