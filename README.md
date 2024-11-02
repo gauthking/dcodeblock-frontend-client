@@ -56,6 +56,12 @@ After setting up environment variables and installing dependencies, you can run 
 ```
 
 ## Application Screenshots
+![image](https://github.com/user-attachments/assets/9b51c128-db50-4812-a8a3-7ec079bcd905)
+
+![image](https://github.com/user-attachments/assets/d3c074eb-78bd-46d6-b5e9-c74c8b376fc9)
+
+![image](https://github.com/user-attachments/assets/041afffc-5a21-49a1-8b80-a45832da1572)
+
 ![image](https://github.com/user-attachments/assets/a55c5abd-a352-4966-8f3c-b07a1083d23c)
 
 ![image](https://github.com/user-attachments/assets/109766ef-fbe2-4c90-a13e-e183db41dee1)
