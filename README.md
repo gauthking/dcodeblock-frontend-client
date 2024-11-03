@@ -1,4 +1,4 @@
-# Admin Dashboard with Role-Based Access Control - Frontend Client - DCODEBLOCK Submission
+# Admin Dashboard with Role-Based Access Control - Frontend Client - DCODEBLOCK Frontend Role Submission
 
 This is the frontend client for the **DCODEBLOCK Admin Dashboard with Role-Based Access Control application (Frontend Assignment-1)**, built using React, TypeScript, and other essential libraries to provide a seamless user experience. This repository is submitted as part of the DCODEBLOCK Frontend Engineer Hackathon.
 
