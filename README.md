@@ -5,7 +5,7 @@ This is the frontend client for the **DCODEBLOCK Admin Dashboard with Role-Based
 Applicant Name & Details- [C P Gautham Krishna](https://www.linkedin.com/in/c-p-gautham-krishna-580450227/)
 
 - **Live Website**: [https://dcodeblock-frontend-client.onrender.com/](https://dcodeblock-frontend-client.onrender.com/)
-- **Demo Video**: (Add link here if available)
+- **Demo Video**: https://youtu.be/CY2JERFqS2A
 - **Backend Server API Repository**: [https://github.com/gauthking/dcodeblock-frontend-serverapi](https://github.com/gauthking/dcodeblock-frontend-serverapi)
 
 ## Table of Contents
